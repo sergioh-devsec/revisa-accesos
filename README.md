@@ -1,21 +1,29 @@
-# Auth Log Analyzer · CyberSerchMX
+# Revisa accesos
 
-Herramienta terminada de clasificación local de eventos. No conecta servicios ni escanea sistemas. Python 3.10 o posterior, sin dependencias.
+Soy Serch. Quise convertir una lista de accesos en una primera señal que pudiera revisar sin leer línea por línea.
 
-## Problema y resultado reproducible
+## Por qué y para qué
+Desde mis conocimientos de redes y ciberseguridad empecé por un formato acotado: hora, decisión e IPv4. Separé validación, agrupación e informe; elegí biblioteca estándar de Python para que se pueda repetir sin instalar un entorno grande.
 
-Leer eventos uno por uno oculta los orígenes que acumulan rechazos. El programa valida hora, estado e IPv4, agrupa los rechazos y señala los que alcanzan el umbral. La muestra ficticia `sample.log` contiene 5 eventos, 4 rechazos y un origen con 3 rechazos: `192.0.2.14`.
+Lo estoy incorporando a mi laboratorio como parte de mi práctica profesional y mi curiosidad por construir herramientas útiles. Esta es una herramienta de muestra, no una historia de resultados de clientes.
 
-```sh
-python analyzer.py sample.log
-python analyzer.py sample.log --threshold 3 --output report.json
-python -m unittest -v
-```
+## Pruébalo
+Python 3.10 o posterior, sin dependencias externas. Desde esta carpeta:
 
-Formato: `HH:MM:SS ACCEPT|DENY IPv4`, un evento por línea. Salida JSON con total, válidos, aceptados, rechazados, líneas inválidas y hallazgos. El informe nunca sobrescribe un archivo existente. Límite de entrada: 2 MB. Código de salida 2 para errores de entrada o escritura.
+    python analyzer.py sample.log --threshold 3
+    python -m unittest -v
 
-## Límites y privacidad
+También puedes usar la [versión ligera en el navegador](https://sergioh-devsec.github.io/herramientas.html#logs), sin enviar el archivo a un servidor.
 
-Cuenta todo el archivo; no calcula ventanas temporales, autenticación real ni correlación. Una IP compartida puede representar usuarios diferentes. Un hallazgo requiere revisión humana y no demuestra un ataque. No es Wazuh, un SIEM ni una auditoría. Usa registros propios o autorizados y no publiques registros de clientes en issues.
+## Proceso
+1. Definí la entrada y sus límites antes de programar.
+2. Separé lógica de procesamiento y argumentos de la terminal.
+3. Preparé una muestra ficticia y pruebas de entradas válidas e inválidas.
+4. Añadí exportación y mensajes de error que permiten revisar el resultado.
 
-La demostración web relacionada está en https://sergioh-devsec.github.io/#laboratory. Este repositorio contiene la versión CLI en Python.
+## Alcance honesto
+La muestra contiene cinco eventos válidos, cuatro rechazos y un origen con tres rechazos. El umbral marca una señal, no demuestra un ataque. No hay ventana temporal ni compatibilidad universal con logs de productos. Límite de entrada: 2 MB.
+
+El archivo original no se modifica. No se recoge telemetría ni se envían datos. No publiques registros reales en incidencias. El próximo paso es ampliar formatos conservando las validaciones.
+
+— Serch · CyberSerchMX
